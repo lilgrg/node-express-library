@@ -12,7 +12,10 @@ var app = express();
 
 //Database setup
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb+srv://lilgurung:amityit1@cluster0-p19nz.mongodb.net/local_library?retryWrites=true';
+// Set up mongoose connection
+var dev_db_url = 'mongodb+srv://lilgurung:amityit1@cluster0-p19nz.mongodb.net/local_library?retryWrites=true'
+var mongoDB = process.env.MONGODB_URI || dev_db_url;
+
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -33,12 +36,12 @@ app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
